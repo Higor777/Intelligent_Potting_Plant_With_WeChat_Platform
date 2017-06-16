@@ -5,7 +5,7 @@ Intelligent_Potting_Plant_With_WeChat_Platform
     Python3实现
     Server环境为Ubuntu16.04，Python3.4
     Terminal环境为树莓派3，Raspbian，Python3.4
-    盆栽控制为单独的控制板，使用STM32
+    盆栽控制为单独的控制板，使用STM32,uC/OS-III
     这个主要是玩了玩微信公众平台的接口，代码较乱
 
 
