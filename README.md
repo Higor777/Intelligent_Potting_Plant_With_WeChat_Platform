@@ -10,11 +10,11 @@ Intelligent_Potting_Plant_With_WeChat_Platform
 
 
 # 盆栽状态
-<img src="https://github.com/Higor777/Intelligent_Potting_Plant_With_WeChat_Platform/blob/master/status.png" width="360"  height="640" alt="status"/>
+<img src="https://github.com/Higor777/Intelligent_Potting_Plant_With_WeChat_Platform/blob/master/status.png" width="270"  height="480" alt="status"/>
 
 # 盆栽控制
-<img src="https://github.com/Higor777/Intelligent_Potting_Plant_With_WeChat_Platform/blob/master/control.png" width="360"  height="640" alt="control"/>
+<img src="https://github.com/Higor777/Intelligent_Potting_Plant_With_WeChat_Platform/blob/master/control.png" width="270"  height="480" alt="control"/>
 
 # 盆栽管理
-<img src="https://github.com/Higor777/Intelligent_Potting_Plant_With_WeChat_Platform/blob/master/manage.png" width="360"  height="640" alt="manage"/>
+<img src="https://github.com/Higor777/Intelligent_Potting_Plant_With_WeChat_Platform/blob/master/manage.png" width="270"  height="480" alt="manage"/>
 
