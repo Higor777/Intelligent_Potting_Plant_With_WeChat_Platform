@@ -1,0 +1,147 @@
+<!DOCTYPE >
+<html>
+<head>
+    <title>Controller</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <style type="text/css">
+    body,table,input {
+        font-family: 'Microsoft YaHei';
+    }
+    .control_panel {
+        /*max-width: 640px;*/
+        width:100%;
+        margin: 0 auto;
+    }
+    .control_panel table {
+        width:100%;
+    }
+    .control_panel table tr {
+        width:100%;
+    }
+    .control_panel table tr td {
+        width:33.3%;
+        text-align: center;
+        margin: 15px 0;
+    }
+    .control_panel table tr td.left {
+        text-align: right;
+    }
+    .control_panel table tr td.right {
+        text-align: left;
+    }
+    .control_panel input {
+       background-color: transparent;
+       border: 0;
+       width: 6.25em;
+       height: 6.25em;
+       margin: 0.5em;
+       color: #EEE;
+    }
+	
+    .control_panel input:active  {
+        background-position: center;
+		background-size: auto;
+    }
+	
+    .control_panel .btn {
+        background-repeat: no-repeat;
+        background-size: 120px 120px;
+        background-position:center;;
+    }
+    .control_panel .up-btn {
+        background-image: url(http://60.205.189.203/static/up-256.png);
+    }
+    .control_panel .left-btn {
+        background-image: url(http://60.205.189.203/static/left-256.png);
+    }
+
+    .control_panel .right-btn {
+        background-image: url(http://60.205.189.203/static/right-256.png);
+    }
+
+    .control_panel .bottom-btn {
+        background-image: url(http://60.205.189.203/static/down-256.png);
+    }
+
+    .control_panel .center-btn {
+        background-image: url(http://60.205.189.203/static/pause-256.png);
+    }
+	
+	.control_panel .anticw-btn {
+		background-size: 70px 70px;
+		background-position: center;
+        background-image: url(http://60.205.189.203/static/anticw-256.png);
+    }
+	.control_panel .anticw-btn:active  {
+		background-size: 95px 95px;
+    }
+	
+	.control_panel .cw-btn {
+		background-size: 70px 70px;
+		background-position: center;
+        background-image: url(http://60.205.189.203/static/cw-256.png);
+    }
+	.control_panel .cw-btn:active  {
+		background-size: 95px 95px;
+    }
+    </style>
+</head>
+<body>
+<p align="center">请在网络良好时使用</p>
+<p align="center">点击频率不要太高</p>
+<div class="control_panel">
+{% if terminal_id %}
+<table>
+	<tr>
+		<td></td>
+		<td><input type="button" operation="{{terminal_id}}:forward" class="up-btn btn"/></td>
+	</tr>
+	<tr>
+		<td class="left"><input type="button" operation="{{terminal_id}}:left" class="left-btn btn"/></td>
+		<td><input type="button" operation="{{terminal_id}}:pause" class="center-btn btn"/></td>
+		<td class="right"><input type="button" operation="{{terminal_id}}:right" class="right-btn btn"/></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="button" operation="{{terminal_id}}:backward" class="bottom-btn btn"/></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td class="left"><input type="button" operation="{{terminal_id}}:anticw" class="anticw-btn btn"/></td>
+		<td></td>
+		<td class="right"><input type="button" operation="{{terminal_id}}:cw" class="cw-btn btn"/></td>
+	</tr>
+</table>
+{% endif %}
+</div>
+</body>
+</html>
+<script type='text/javascript' src='../static/jquery.min.js'></script>
+<script type="text/javascript">
+    $(function(){
+        setH();
+        $(window).resize(function(){
+            setH();
+        });
+        $('.btn').click(function(){
+            $.get("/handle", {type: $(this).attr('operation')}, function(data) {
+                if (data=="ok") {
+
+                }else {
+                    alert(data)
+                }
+            });
+        });
+    });
+    function setH(){
+        var winHei = "", boxHei = "";
+        winHei = $(window).height();
+        boxHei = $('.control_panel').height();
+        console.log(winHei);
+        console.log(boxHei);
+        $('.control_panel').css('margin-top',(winHei-boxHei)/3);
+    }
+</script>
