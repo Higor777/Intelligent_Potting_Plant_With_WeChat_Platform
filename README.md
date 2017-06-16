@@ -1,5 +1,5 @@
-# Intelligent_Potting_Plant_With_WeChat-Platform
-Intelligent_Potting_Plant_With_WeChat Platform
+# Intelligent_Potting_Plant_With_WeChat_Platform
+Intelligent_Potting_Plant_With_WeChat_Platform
 
 # 智能盆栽——基于微信公众平台接口
     Python3实现
@@ -10,11 +10,9 @@ Intelligent_Potting_Plant_With_WeChat Platform
 
 
 # 盆栽状态
-![盆栽状态](https://github.com/Higor777/Intelligent_Potting_Plant_With_WeChat_Platform/blob/master/status.png "status")
+<img src="https://github.com/Higor777/Intelligent_Potting_Plant_With_WeChat_Platform/blob/master/status.png" width="360"  height="640" alt="status"/>
 # 盆栽控制
-![盆栽控制](https://github.com/Higor777/Intelligent_Potting_Plant_With_WeChat_Platform/blob/master/control.png "control")
+<img src="https://github.com/Higor777/Intelligent_Potting_Plant_With_WeChat_Platform/blob/master/control.png" width="360"  height="640" alt="status"/>
 # 盆栽管理
-![盆栽管理](https://github.com/Higor777/Intelligent_Potting_Plant_With_WeChat_Platform/blob/master/manage.png "manage")
+<img src="https://github.com/Higor777/Intelligent_Potting_Plant_With_WeChat_Platform/blob/master/manage.png" width="360"  height="640" alt="manage"/>
 
-# 许可协议
-* [The MIT License](https://github.com/Higor777/Intelligent_Potting_Plant_With_WeChat_Platform/blob/master/LICENSE)
