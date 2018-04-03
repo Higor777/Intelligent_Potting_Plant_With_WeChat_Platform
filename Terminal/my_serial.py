@@ -14,6 +14,7 @@ cmd={
     'dkgz':0x08,
     'gbgz':0x09,
     'js':0x0A,
+    'dskg':0x0B,
 }
 class MySerial(object):
     def __init__(self,serial_device=None,baud_rate=None):

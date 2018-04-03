@@ -367,7 +367,7 @@ class WeiXinClient(object):
 def test():
     ''' test the API '''
 
-    w = WeiXinClient('your appID','your appsecret')
+    w = WeiXinClient('wx270e18185d243d54','d824322379b3420848c46e0f320faf7e')
     w.request_access_token()
     print(w.access_token)
     #w.upload_madia('image','test1.png')

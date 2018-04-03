@@ -207,59 +207,64 @@ class WeiXinClient(object):
         menu_setting = {
         "button":[
             {
-                "name": "我的盆栽",
+                "name": "我的家居",
                 "sub_button": [
                     {
                         "type": "click",
-                        "name": "盆栽状态",
+                        "name": "家居状态",
                         "key": "pzzt"
                     },
                     {
                         "type": "click",
-                        "name": "盆栽图像",
+                        "name": "安防图像",
                         "key": "pztx"
                     },
                     {
                         "type": "click",
-                        "name": "成长天数",
+                        "name": "使用时长",
                         "key": "czts"
                     }]
             },
             {
-                "name": "盆栽遥控",
+                "name": "设备控制",
                 "sub_button": [
                     {
                         "type": "click",
-                        "name": "打开关照",
+                        "name": "灯光开关",
                         "key": "dkgz"
                     },
                     {
                         "type": "click",
-                        "name": "关闭关照",
+                        "name": "空调开关",
                         "key": "gbgz"
                     },
                     {
                         "type": "click",
-                        "name": "浇水",
+                        "name": "窗帘开关",
                         "key": "js"
                     },
                     {
                         "type": "click",
-                        "name": "遥控移动",
+                        "name": "电视开关",
+                        "key": "dskg"
+                    },
+                    {
+                        "type": "click",
+                        "name": "遥控面板",
                         "key": "ykyd"
                     }]
             },
             {
-                "name": "盆栽管理",
+                "name": "主控管理",
                 "sub_button": [
                     {
                         "type": "scancode_waitmsg",
-                        "name": "绑定盆栽",
+                        "name": "绑定主控",
                         "key": "bdpz"
                     },
                     {
                         "type": "scancode_waitmsg",
-                        "name": "解绑盆栽",
+                        "name": "解绑主控",
                         "key": "jbpz"
                     }]
             }
@@ -367,7 +372,7 @@ class WeiXinClient(object):
 def test():
     ''' test the API '''
 
-    w = WeiXinClient('your appID','your appsecret')
+    w = WeiXinClient('wx270e18185d243d54','d824322379b3420848c46e0f320faf7e')
     w.request_access_token()
     print(w.access_token)
     #w.upload_madia('image','test1.png')
@@ -380,8 +385,8 @@ def test():
     #w.create_qr(7777)
     #w.get_qr('gQEU8jwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyOWNxOEZxWjE4UFQxMDAwMHcwMzcAAgTJigRZAwQAAAAA')
     #exit(0)
-    #w.delete_menu()
-    #w.create_menu()
+    w.delete_menu()
+    w.create_menu()
 
     print(w.__str__())
 

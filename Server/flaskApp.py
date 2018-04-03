@@ -206,14 +206,14 @@ def response_event(xml):
             scene_id = EventKey
             wechat_client.set_user_terminal(fromUserName, scene_id)
             if 'nickname' in rjson.keys():
-                reply = generate_reply(fromUserName,toUserName,createTime,'text',text = 'Hello %s,欢迎订阅智能盆栽。\n已为您绑定盆栽：%s'%(rjson['nickname'],scene_id))
+                reply = generate_reply(fromUserName,toUserName,createTime,'text',text = 'Hello %s,欢迎订阅智能家居。\n已为您绑定家庭主控：%s'%(rjson['nickname'],scene_id))
             else:
-                reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='欢迎订阅智能盆栽。\n已为您绑定盆栽：%s'%scene_id)
+                reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='欢迎订阅智能家居。\n已为您绑定家庭主控：%s'%scene_id)
         else:
             if 'nickname' in rjson.keys():
-                reply = generate_reply(fromUserName,toUserName,createTime,'text',text = 'Hello %s,欢迎订阅智能盆栽。'%rjson['nickname'])
+                reply = generate_reply(fromUserName,toUserName,createTime,'text',text = 'Hello %s,欢迎订阅智能家居。'%rjson['nickname'])
             else:
-                reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='欢迎订阅智能盆栽。')
+                reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='欢迎订阅智能家居。')
     elif Event == 'unsubscribe' :
         toUserName, fromUserName, createTime = get_baseinfo(xml)
         print(fromUserName, ' evnet_unsubscribe')
@@ -229,9 +229,9 @@ def response_event(xml):
         scene_id = str(EventKey)
         wechat_client.set_user_terminal(fromUserName, scene_id)
         if 'nickname' in rjson.keys():
-            reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='Hello %s,\n已为您绑定盆栽：%s' % (rjson['nickname'], scene_id))
+            reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='Hello %s,\n已为您绑定家庭主控：%s' % (rjson['nickname'], scene_id))
         else:
-            reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='已为您绑定盆栽：%s' % scene_id)
+            reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='已为您绑定家庭主控：%s' % scene_id)
         #reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='二维码参数为：%s' % scene_id)
     else:
         reply = response_unknow(xml)
@@ -250,12 +250,12 @@ def response_evnet_scancode_waitmsg(xml):
             print(wechat_client.user_terminal_cache)
             if 'nickname' in rjson.keys():
                 reply = generate_reply(fromUserName, toUserName, createTime, 'text',
-                                       text='Hello %s。\n已为您绑定盆栽：%s' % (rjson['nickname'], scene_id))
+                                       text='Hello %s。\n已为您绑定家庭主控：%s' % (rjson['nickname'], scene_id))
             else:
-                reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='已为您绑定盆栽：%s' % scene_id)
+                reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='已为您绑定家庭主控：%s' % scene_id)
         else:
             reply = generate_reply(fromUserName, toUserName, createTime, 'text',
-                                   text='该二维码不是盆栽二维码，二维码信息：%s。' % str(ScanResult))
+                                   text='该二维码不是家庭主控二维码，二维码信息：%s。' % str(ScanResult))
     elif EventKey == 'jbpz':
         if scene_id:
             if scene_id == wechat_client.get_user_terminal(fromUserName):
@@ -263,15 +263,15 @@ def response_evnet_scancode_waitmsg(xml):
                 wechat_client.del_user_terminal(fromUserName)
                 print(wechat_client.user_terminal_cache)
                 if 'nickname' in rjson.keys():
-                    reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='Hello %s。\n已为您解绑盆栽：%s。' % (rjson['nickname'], scene_id))
+                    reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='Hello %s。\n已为您解绑家庭主控：%s。' % (rjson['nickname'], scene_id))
                 else:
-                    reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='已为您解绑盆栽：%s。' % scene_id)
+                    reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='已为您解绑家庭主控：%s。' % scene_id)
             else:
-                reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='您尚未绑定盆栽：%s。无需解绑。' % scene_id)
+                reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='您尚未绑定家庭主控：%s。无需解绑。' % scene_id)
         else:
-            reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='该二维码不是盆栽二维码，二维码信息：%s。' % str(ScanResult))
+            reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='该二维码不是家庭主控二维码，二维码信息：%s。' % str(ScanResult))
     else:
-        reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='该二维码不是盆栽二维码，二维码信息：%s。' % str(ScanResult))
+        reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='该二维码不是家庭主控二维码，二维码信息：%s。' % str(ScanResult))
     return reply
 
 def response_event_click(xml):
@@ -281,7 +281,7 @@ def response_event_click(xml):
     print(fromUserName,' evnet_key:', EventKey)
     terminal_id = wechat_client.get_user_terminal(fromUserName)
     if not  terminal_id :
-        reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='你还未绑定盆栽，请在盆栽管理中绑定。')
+        reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='你还未绑定家庭主控，请在主控管理中绑定。')
     elif terminal_id in online_terminal.keys():
         terminal_msg[terminal_id] = None
         socket_connection[online_terminal[terminal_id]].sendall(bytes('''{"cmd":"%s"}''' % EventKey, encoding='utf-8'))
@@ -290,7 +290,7 @@ def response_event_click(xml):
             time.sleep(0.1)
         if not terminal_msg[terminal_id]:
             print('timeout')
-            reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='网络传输超时，您的盆栽未及时响应，请检查盆栽网络是否良好。')
+            reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='网络传输超时，您的家庭主控未及时响应，请检查家庭主控网络是否良好。')
         else:
             if EventKey == 'ykyd':
                 if terminal_msg[terminal_id]['msg'] == 'on':
@@ -307,18 +307,18 @@ def response_event_click(xml):
                     # print(control_url)
                     reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='请点击链接进行遥控，链接有效时间10分钟：\n%s' % control_url)
                 elif terminal_msg[terminal_id]['msg'] == 'off':
-                    reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='盆栽在线，但控制器未连接。')
+                    reply = generate_reply(fromUserName, toUserName, createTime, 'text',text='家庭主控在线，但控制器未连接。')
                 else:
-                    reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='盆栽终端回复了未知信息。')
+                    reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='家庭主控终端回复了未知信息。')
             elif terminal_msg[terminal_id]['msg'] == 'text':
                 reply = generate_reply(fromUserName, toUserName, createTime, 'text', text=terminal_msg[terminal_id]['text'])
             elif terminal_msg[terminal_id]['msg'] == 'image':
                 reply = generate_reply(fromUserName, toUserName, createTime, 'image', image=terminal_msg[terminal_id]['image'])
             else:
-                reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='盆栽终端回复了未知信息。')
+                reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='家庭主控终端回复了未知信息。')
     else:
         print('tarminal offlinee')
-        reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='您的盆栽处于离线状态，请检查盆栽网络状态。')
+        reply = generate_reply(fromUserName, toUserName, createTime, 'text', text='您的家庭主控处于离线状态，请检查家庭主控网络状态。')
     return reply
 
 
@@ -401,9 +401,9 @@ def control():
                     reply = '链接已失效，请重新获取。'
                 else:
                     if terminal_id in online_terminal.keys():
-                        reply = make_response(render_template("index.html",terminal_id=id_b64encode))
+                        reply = make_response(render_template("control.html",terminal_id=id_b64encode))
                     else:
-                        reply = '您的盆栽已离线。'
+                        reply = '您的家庭主控已离线。'
         else:
             reply = '参数错误。'
     else:
@@ -443,7 +443,7 @@ def handle():
                                 socket_connection[online_terminal[terminal_id]].sendall(bytes('''{"cmd":"%s"}''' % cmd, encoding='utf-8'))
                                 reply = 'ok'
                             else:
-                                reply = '您的盆栽已离线。'
+                                reply = '您的家庭主控已离线。'
                 else:
                     reply = '参数错误。'
             else:

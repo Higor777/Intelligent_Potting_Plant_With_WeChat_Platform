@@ -9,7 +9,7 @@ import os
 import xml.etree.ElementTree as ET
 import socket
 import threading
-
+import datetime
 from my_serial import MySerial
 from weChatApp import WeiXinClient,FileCache
 
@@ -18,7 +18,7 @@ from weChatApp import WeiXinClient,FileCache
 #The terminal_ID should be unique.
 terminal_ID = '7777'
 first_time = 0
-timeout = 10
+timeout = 5
 socket.setdefaulttimeout(timeout)
 
 global serial
@@ -26,15 +26,16 @@ global sensor_data
 serial = None
 sensor_data = {
     'update':False,
-    'temperature':'未更新',
-    'soil_moisture':'未更新',
-    'illumination':'未更新',
+    't温度':'未更新',
+    's湿度':'未更新',
+    'i光照':'未更新',
 }
 
 cmd_info={
-    'dkgz':'打开光照',
-    'gbgz':'关闭光照',
-    'js':'浇水',
+    'dkgz':'灯光开关',
+    'gbgz':'空调开关',
+    'js':'窗帘开关',
+    'dskg':'电视开关',
 }
 
 
@@ -69,85 +70,102 @@ def clientTask():
                 set_str = ret_bytes.decode()
                 print(set_str)
                 rjson = None
-                try:
-                    rjson = json.loads(set_str)
-                except Exception as e:
-                    print('json.loads error:', e)
-                if rjson:
-                    if 'cmd' in rjson.keys():
-                        if rjson['cmd'] == 'pzzt':
-                            if serial.isOpened or sensor_data['update']:
-                                msg = '传感器在线。\\n温度:%s ℃\\n土壤湿度:%s\\n光照强度:%s'%(sensor_data['temperature'],sensor_data['soil_moisture'],sensor_data['illumination'])
-                                print(msg)
-                                conn.sendall(bytes('{"msg":"text","text":"%s"}'%msg, encoding='utf-8'))
-                            else:
-                                conn.sendall(bytes('{"msg":"text","text":"盆栽在线，但传感器未连接。"}',encoding='utf-8'))
-                        elif rjson['cmd'] == 'czts':
-                            sztime = int(time.time()) - first_time
-                            day = 24*60*60
-                            hour = 60*60
-                            minute = 60
-                            if sztime > day:
-                                reply = '%d天%d时%d分%d秒'%(sztime/day,(sztime%day)/hour,(sztime%hour)/minute,sztime%60)
-                            elif sztime > hour:
-                                reply = '%d时%d分%d秒'%(sztime/hour,(sztime%hour)/minute,sztime%60)
-                            elif sztime > minute:
-                                reply = '%d分%d秒'%(sztime/minute,sztime%60)
-                            else:
-                                reply = '%d秒'%(sztime%60)
-                            conn.sendall(bytes('{"msg":"text","text":"您的盆栽已成长%s。"}'%reply, encoding='utf-8'))
-                        elif rjson['cmd'] == 'ykyd':
-                            if serial.isOpened:
-                                conn.sendall(bytes('{"msg":"on"}', encoding='utf-8'))
-                            else:
-                                conn.sendall(bytes('{"msg":"off"}',encoding='utf-8'))
-                        elif rjson['cmd'] == 'pztx':
-                            try:
-                                #from VideoCapture import Device
-                                #cam = Device(1)
-                                #cam.saveSnapshot('test.jpg',1,0,'br')
-                                #del cam
+                set_list =  set_str.split('}')
+                for jsonstr in set_list:
+                    if jsonstr:
+                        jsonstr = jsonstr + '}'
+                    else :
+                        continue
+                    print(jsonstr)
+                    try:
+                        rjson = json.loads(jsonstr)
+                    except Exception as e:
+                        print('json.loads error:', e)
+                    if rjson:
+                        if 'cmd' in rjson.keys():
+                            if rjson['cmd'] == 'pzzt':
+                                if serial.isOpened or sensor_data['update']:
+                                    msg = '传感器在线。\\n温度:%s ℃\\n湿度:%s\\n光照强度:%s'%(sensor_data['t温度'],sensor_data['s湿度'],sensor_data['i光照'])
+                                    print(msg)
+                                    conn.sendall(bytes('{"msg":"text","text":"%s"}'%msg, encoding='utf-8'))
+                                else:
+                                    conn.sendall(bytes('{"msg":"text","text":"家庭主控在线，但传感器未连接。"}',encoding='utf-8'))
+                            elif rjson['cmd'] == 'czts':
+                                sztime = int(time.time()) - first_time
+                                day = 24*60*60
+                                hour = 60*60
+                                minute = 60
+                                if sztime > day:
+                                    reply = '%d天%d时%d分%d秒'%(sztime/day,(sztime%day)/hour,(sztime%hour)/minute,sztime%60)
+                                elif sztime > hour:
+                                    reply = '%d时%d分%d秒'%(sztime/hour,(sztime%hour)/minute,sztime%60)
+                                elif sztime > minute:
+                                    reply = '%d分%d秒'%(sztime/minute,sztime%60)
+                                else:
+                                    reply = '%d秒'%(sztime%60)
+                                conn.sendall(bytes('{"msg":"text","text":"您已使用智能家居%s。"}'%reply, encoding='utf-8'))
+                            elif rjson['cmd'] == 'ykyd':
+                                if serial.isOpened:
+                                    conn.sendall(bytes('{"msg":"on"}', encoding='utf-8'))
+                                else:
+                                    conn.sendall(bytes('{"msg":"off"}',encoding='utf-8'))
+                            elif rjson['cmd'] == 'pztx':
+                                try:
+                                    #from VideoCapture import Device
+                                    #cam = Device(1)
+                                    #cam.saveSnapshot('test.jpg',1,0,'br')
+                                    #del cam
 
-                                #--no-banner
-                                #--no-timestamp
-                                #Intelligent potting plant
-                                #-s contrast=50%
-                                #--skip 10
-                                min_upload_time_interval = 3.0
-                                if time.time() - last_upload_time > min_upload_time_interval:
-                                    last_upload_time = time.time()
-                                    time_str = time.ctime(time.time()+28800)
-                                    cmd = '''sudo fswebcam -d /dev/video0 -r 640x480 --bottom-banner --title "Intelligent potting plant" --timestamp "%s" --save test.jpg -s brightness=100%%  --jpeg 95 --skip 10'''%(time_str)
-                                    os.system(cmd)#>/dev/null 2>&1
-                                    media_id = wechat_client.get_media_id('image', 'test.jpg', True)
+                                    #--no-banner
+                                    #--no-timestamp
+                                    #Intelligent potting plant
+                                    #-s contrast=50%
+                                    #--skip 10
+                                    min_upload_time_interval = 3.0
+                                    if time.time() - last_upload_time > min_upload_time_interval:
+                                        last_upload_time = time.time()
+                                        time_str = str(datetime.datetime.fromtimestamp(time.time()+28800)).replace(' ','-')[:-7]
+                                        print(time_str)
+                                        #cmd = '''sudo fswebcam -d /dev/video0 -r 640x480 --bottom-banner --title "Intelligent potting plant" --timestamp "%s" --save test.jpg -s brightness=100%%  --jpeg 95 --skip 10'''%(time_str)
+                                        #os.system(cmd)#>/dev/null 2>&1
+                                        os.system('cp -f test.jpg upload/%s.jpg' % time_str)
+                                        media_id = wechat_client.get_media_id('image', 'test.jpg', True)
+                                    else:
+                                        print('Upload time interval less then %d s'%min_upload_time_interval)
+                                        media_id = wechat_client.get_media_id('image', 'test.jpg', False)
+                                    if media_id:
+                                        print(media_id)
+                                        conn.sendall(bytes('{"msg":"image","image":"%s"}'%media_id,encoding = 'utf-8'))
+                                        #os.system('rm -f test.jpg')
+                                        os.system('mv -f test.jpg test_last.jpg')
+                                    else:
+                                        conn.sendall(bytes('{"msg":"text","text":"家庭主控在线，但摄像头未连接。"}', encoding='utf-8'))
+                                except Exception as e:
+                                    print('cam error: ',e)
+                                    conn.sendall(bytes('{"msg":"text","text":"家庭主控在线，但摄像头未连接。"}',encoding= 'utf-8'))
+                            elif serial.isOpened:
+                                if serial.sendCmdPack(rjson):
+                                    if rjson['cmd'] in cmd_info.keys():
+                                        conn.sendall(bytes('{"msg":"text","text":"家庭主控在线，已向控制器发送%s命令。"}'%cmd_info[rjson['cmd']], encoding='utf-8'))
                                 else:
-                                    print('Upload time interval less then %d s'%min_upload_time_interval)
-                                    media_id = wechat_client.get_media_id('image', 'test.jpg', False)
-                                if media_id:
-                                    print(media_id)
-                                    conn.sendall(bytes('{"msg":"image","image":"%s"}'%media_id,encoding = 'utf-8'))
-                                    #os.system('rm -f test.jpg')
-                                    os.system('mv -f test.jpg test_last.jpg')
-                                else:
-                                    conn.sendall(bytes('{"msg":"text","text":"盆栽在线，但摄像头未连接。"}', encoding='utf-8'))
-                            except Exception as e:
-                                print('cam error: ',e)
-                                conn.sendall(bytes('{"msg":"text","text":"盆栽在线，但摄像头未连接。"}',encoding= 'utf-8'))
-                        elif serial.isOpened:
-                            if serial.sendCmdPack(rjson):
-                                if rjson['cmd'] in cmd_info.keys():
-                                    conn.sendall(bytes('{"msg":"text","text":"盆栽在线，已向控制器发送%s命令。"}'%cmd_info[rjson['cmd']], encoding='utf-8'))
+                                    pass
+                                    #move cmd
+                                    #conn.sendall(bytes('{"msg":"text","text":"家庭主控在线，系统没有此命令。"}',encoding='utf-8'))
                             else:
-                                pass
-                                #move cmd
-                                #conn.sendall(bytes('{"msg":"text","text":"盆栽在线，系统没有此命令。"}',encoding='utf-8'))
-                        else:
-                            conn.sendall(bytes('{"msg":"text","text":"盆栽在线，但控制器未连接。"}', encoding='utf-8'))
-                else:
-                    print(None)
+                                conn.sendall(bytes('{"msg":"text","text":"家庭主控在线，但控制器未连接。"}', encoding='utf-8'))
+                    else:
+                        print(None)
             if beat_time < time.time():
                 conn.sendall(bytes('{"heartbeat":"%s"}' % terminal_ID, encoding='utf-8'))
                 beat_time = time.time() + timeout
+                try:
+                    os.system('mv -f test.jpg test_last.jpg')
+                    time_str = time.ctime(time.time() + 28800)
+                    cmd = '''sudo fswebcam -d /dev/video0 -r 1920x1080 --bottom-banner --title "Higor Smart Home" --timestamp "%s" --save test.jpg -s brightness=100%%  --jpeg 100 --skip 10''' % (
+                    time_str)
+                    os.system(cmd)  # >/dev/null 2>&1
+                except Exception as e:
+                    print (e)
         except Exception as e:
             print('socket:',e)
             #traceback.print_exc()
@@ -165,7 +183,7 @@ def clientTask():
 
 def serialTask():
     global serial
-    serial_device = '/dev/ttyUSB0'
+    serial_device = '/dev/ttyACM0'
     #serial_device = 'COM3'
     baud_rate = 115200
     serial = MySerial(serial_device, baud_rate)
